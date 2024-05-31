@@ -1,12 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class ScreenHome extends StatelessWidget {
   ScreenHome({super.key});
   ValueNotifier<bool> isExpandedNotifier = ValueNotifier(false);
-  ValueNotifier<bool> muteToggleNotofier = ValueNotifier(false);
+  ValueNotifier<bool> muteToggleNotifier = ValueNotifier(false);
+  ValueNotifier<int> followNotifier = ValueNotifier(-1);
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +189,7 @@ class ScreenHome extends StatelessWidget {
                           fontSize: 20.0, fontWeight: FontWeight.bold),
                     ),
                     ValueListenableBuilder(
-                        valueListenable: muteToggleNotofier,
+                        valueListenable: muteToggleNotifier,
                         builder: (ctx, newValue, _) {
                           return Switch(
                               value: newValue,
@@ -199,7 +198,7 @@ class ScreenHome extends StatelessWidget {
                               inactiveThumbColor: Colors.grey,
                               inactiveTrackColor: Colors.white,
                               onChanged: (val) =>
-                                  muteToggleNotofier.value = val);
+                                  muteToggleNotifier.value = val);
                         })
                   ],
                 ),
@@ -312,9 +311,63 @@ class ScreenHome extends StatelessWidget {
                   ],
                 ),
                 //Members-List
+                Column(
+                  children: List.generate(10, (index) {
+                    return ListTile(
+                      title: const Text(
+                        'Yashika',
+                        style: TextStyle(
+                            fontSize: 17.0, fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: const Text(
+                        '29, India',
+                        style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.grey),
+                      ),
+                      leading: const CircleAvatar(
+                        radius: 35.0,
+                        backgroundColor: Colors.transparent,
+                        backgroundImage:
+                            AssetImage('assets/images/profile_picture.jpeg'),
+                      ),
+                      trailing: ValueListenableBuilder(
+                          valueListenable: followNotifier,
+                          builder: (ctx, newvalue, _) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                color: followNotifier.value == index
+                                    ? Colors.grey
+                                    : Colors.red,
+                                borderRadius: BorderRadius.circular(20.0),
+                                border: Border.all(
+                                    color: followNotifier.value == index
+                                        ? Colors.grey
+                                        : Colors.red),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0),
+                                child: TextButton(
+                                  onPressed: () {
+                                    followNotifier.value = index;
+                                  },
+                                  child: Text(
+                                    (followNotifier.value == index)
+                                        ? 'Following'
+                                        : 'Add',
+                                    style: const TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                    );
+                  }),
+                ),
               ]),
             ),
-            //Bottom Memebers List
           ],
         ),
       ),
