@@ -1,5 +1,10 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_assignment/screens/home_screen/widgets/animation_container.dart';
+import 'package:flutter_assignment/screens/home_screen/widgets/bottom_buttons.dart';
+import 'package:flutter_assignment/screens/home_screen/widgets/heading_container.dart';
+import 'package:flutter_assignment/screens/home_screen/widgets/members_list.dart';
+import 'package:flutter_assignment/screens/home_screen/widgets/outdoor_buttons.dart';
+import 'package:flutter_assignment/screens/home_screen/widgets/text_details.dart';
 
 class ScreenHome extends StatefulWidget {
   ScreenHome({super.key});
@@ -64,120 +69,19 @@ class _ScreenHomeState extends State<ScreenHome> {
                 //top-image
                 Image.asset('assets/images/image.jpeg'),
                 //heading-container
-                Container(
-                  padding: const EdgeInsets.all(25.0),
-                  decoration: const BoxDecoration(color: Colors.red),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          //Title-1
-                          const Text(
-                            'The weekend',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24.0),
-                          ),
-                          SizedBox(
-                            height: height * 0.01,
-                          ),
-                          //Title-2
-                          const Text(
-                            'Community.  +11K Members',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w700,
-                                fontSize: 18.0),
-                          ),
-                        ],
-                      ),
-                      //Share Icon
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          border: Border.all(color: Colors.white, width: 1.3),
-                        ),
-                        child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.share),
-                          color: Colors.white,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                //details-container
+                HeadingContainer(height: height),
+                //text-details-builder
                 ValueListenableBuilder<bool>(
                   valueListenable: isExpandedNotifier,
                   builder: (ctx, newValue, _) {
-                    return Padding(
-                      padding: EdgeInsets.all(width * 0.04),
-                      child: Column(
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              text: isExpandedNotifier.value
-                                  ? 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s when an unknown printer took a galley of type and scrambled it to make a type specimen book. '
-                                  : '${'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s when an unknown printer took a galley of type and scrambled it to make a type specimen book. '.substring(0, 150)}....',
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 18.0,
-                                  fontWeight: FontWeight.w400),
-                              children: [
-                                TextSpan(
-                                    text: isExpandedNotifier.value
-                                        ? 'Show Less'
-                                        : 'Read More',
-                                    style: const TextStyle(color: Colors.red),
-                                    recognizer: TapGestureRecognizer()
-                                      ..onTap = () {
-                                        isExpandedNotifier.value =
-                                            !isExpandedNotifier.value;
-                                      }),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                    return TextDetails(
+                        width: width, isExpandedNotifier: isExpandedNotifier);
                   },
                 ),
                 //Outdoor Buttons
                 Padding(
                   padding: EdgeInsets.all(width * 0.02),
-                  child: SizedBox(
-                    height: height * 0.04,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.0),
-                            border: Border.all(color: Colors.red),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.only(
-                                left: 10, right: 10, top: 0),
-                            child: TextButton(
-                              onPressed: () {},
-                              child: Text(
-                                (index != 4) ? 'Outdoor' : '+1',
-                                style: const TextStyle(color: Colors.red),
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                      separatorBuilder: (context, index) {
-                        return SizedBox(width: width * 0.01);
-                      },
-                      itemCount: 5,
-                    ),
-                  ),
+                  child: OutdoorButtons(height: height, width: width),
                 ),
 
                 //Media,docs heading
@@ -225,112 +129,16 @@ class _ScreenHomeState extends State<ScreenHome> {
                 Padding(
                   padding: EdgeInsets.all(width * 0.02),
                   child: Column(children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Mute Notification',
-                          style: TextStyle(
-                              fontSize: 20.0, fontWeight: FontWeight.bold),
-                        ),
-                        ValueListenableBuilder(
-                            valueListenable: muteToggleNotifier,
-                            builder: (ctx, newValue, _) {
-                              return Switch(
-                                  value: newValue,
-                                  activeColor: Colors.grey,
-                                  activeTrackColor: Colors.white,
-                                  inactiveThumbColor: Colors.grey,
-                                  inactiveTrackColor: Colors.white,
-                                  onChanged: (val) =>
-                                      muteToggleNotifier.value = val);
-                            })
-                      ],
-                    ),
+                    MuteNotificationButton(
+                        muteToggleNotifier: muteToggleNotifier),
                     //clear-chat-button
-                    TextButton(
-                        onPressed: () {},
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.delete_outline,
-                              color: Colors.black,
-                            ),
-                            SizedBox(
-                              width: width * 0.02,
-                            ),
-                            const Text(
-                              'Clear chat',
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
-                            )
-                          ],
-                        )),
+                    ClearChatButton(width: width),
                     //Encryption button
-                    TextButton(
-                        onPressed: () {},
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.lock_outline,
-                              color: Colors.black,
-                            ),
-                            SizedBox(
-                              width: width * 0.02,
-                            ),
-                            const Text(
-                              'Encryption',
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black),
-                            )
-                          ],
-                        )),
+                    EncryptionButton(width: width),
                     //Exit community
-                    TextButton(
-                        onPressed: () {},
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.exit_to_app_outlined,
-                              color: Colors.red,
-                            ),
-                            SizedBox(
-                              width: width * 0.02,
-                            ),
-                            const Text(
-                              'Exit Community',
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red),
-                            )
-                          ],
-                        )),
+                    ExitCommunityButton(width: width),
                     //report button
-                    TextButton(
-                        onPressed: () {},
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.thumb_down_outlined,
-                              color: Colors.red,
-                            ),
-                            SizedBox(
-                              width: width * 0.02,
-                            ),
-                            const Text(
-                              'Report',
-                              style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red),
-                            )
-                          ],
-                        )),
+                    ReportButton(width: width),
                     //Members Column
                     ValueListenableBuilder(
                         valueListenable: (searchNotifier),
@@ -404,200 +212,19 @@ class _ScreenHomeState extends State<ScreenHome> {
                           );
                         }),
                     //Members-List
-                    Column(
-                      children: List.generate(20, (index) {
-                        return ListTile(
-                          title: const Text(
-                            'Yashika',
-                            style: TextStyle(
-                                fontSize: 17.0, fontWeight: FontWeight.bold),
-                          ),
-                          subtitle: const Text(
-                            '29, India',
-                            style: TextStyle(
-                                fontSize: 15.0,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.grey),
-                          ),
-                          leading: const CircleAvatar(
-                            radius: 35.0,
-                            backgroundColor: Colors.transparent,
-                            backgroundImage: AssetImage(
-                                'assets/images/profile_picture.jpeg'),
-                          ),
-                          trailing: ValueListenableBuilder(
-                              valueListenable: followNotifier,
-                              builder: (ctx, newvalue, _) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    color: followNotifier.value == index
-                                        ? Colors.grey
-                                        : Colors.red,
-                                    borderRadius: BorderRadius.circular(20.0),
-                                    border: Border.all(
-                                        color: followNotifier.value == index
-                                            ? Colors.grey
-                                            : Colors.red),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0),
-                                    child: TextButton(
-                                      onPressed: () {
-                                        followNotifier.value = index;
-                                      },
-                                      child: Text(
-                                        (followNotifier.value == index)
-                                            ? 'Following'
-                                            : 'Add',
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                        );
-                      }),
-                    ),
+                    MembersList(followNotifier: followNotifier),
                   ]),
                 ),
               ],
             ),
+            //Animation Container
             if (_showOverlay)
               AnimatedPositioned(
                 duration: const Duration(milliseconds: 300),
                 top: 0,
                 left: 0,
                 right: 0,
-                child: Container(
-                    padding: const EdgeInsets.all(10.0),
-                    decoration: const BoxDecoration(
-                        color: Color.fromARGB(255, 196, 53, 43)),
-                    child: ListTile(
-                      leading: const CircleAvatar(
-                        radius: 35.0,
-                        backgroundColor: Colors.transparent,
-                        backgroundImage: AssetImage('assets/images/image.jpeg'),
-                      ),
-                      title: const Text(
-                        'The weekend',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20.0),
-                      ),
-                      subtitle: const Text(
-                        'Community.  +11K Members',
-                        style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 15.0),
-                      ),
-                      trailing: IconButton(
-                          onPressed: () {
-                            //Bottom Sheet Pop-Up
-                            showModalBottomSheet<void>(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return Padding(
-                                  padding: EdgeInsets.all(height * 0.02),
-                                  child: SizedBox(
-                                    height: height * 0.16,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: <Widget>[
-                                        Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                //Invite button
-                                                TextButton(
-                                                    onPressed: () {},
-                                                    child: Row(
-                                                      children: [
-                                                        const Icon(
-                                                          Icons
-                                                              .insert_link_outlined,
-                                                          color: Colors.black,
-                                                        ),
-                                                        SizedBox(
-                                                          width: width * 0.02,
-                                                        ),
-                                                        const Text(
-                                                          'Invite',
-                                                          style: TextStyle(
-                                                              fontSize: 20.0,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.black),
-                                                        )
-                                                      ],
-                                                    )),
-                                              ],
-                                            ),
-                                            //Add member button
-                                            TextButton(
-                                                onPressed: () {},
-                                                child: Row(
-                                                  children: [
-                                                    const Icon(
-                                                      Icons.person_add_outlined,
-                                                      color: Colors.black,
-                                                    ),
-                                                    SizedBox(
-                                                      width: width * 0.02,
-                                                    ),
-                                                    const Text(
-                                                      'Add member',
-                                                      style: TextStyle(
-                                                          fontSize: 20.0,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.black),
-                                                    )
-                                                  ],
-                                                )),
-                                            //Add group button
-                                            TextButton(
-                                                onPressed: () {},
-                                                child: Row(
-                                                  children: [
-                                                    const Icon(
-                                                      Icons.group_add_outlined,
-                                                      color: Colors.black,
-                                                    ),
-                                                    SizedBox(
-                                                      width: width * 0.02,
-                                                    ),
-                                                    const Text(
-                                                      'Add Group',
-                                                      style: TextStyle(
-                                                          fontSize: 20.0,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.black),
-                                                    )
-                                                  ],
-                                                ))
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.more_vert_outlined,
-                            color: Colors.white,
-                          )),
-                    )),
+                child: AnimationedContainer(height: height, width: width),
               )
           ],
         ),
